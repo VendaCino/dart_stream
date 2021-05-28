@@ -63,6 +63,16 @@ extension ExtendDartStream<T> on DartStream<T>{
     assert (end >= start);
     return skip(start).limit(end-start);
   }
+  Map<K, U> toMap<K,U>(JFunction<T, K> keyMapper,
+      JFunction<T, U> valueMapper, [BinaryOperator<U> mergeFunction, Supplier<Map<K, U>> mapSupplier]){
+    return collect(Collectors.toMap(keyMapper,valueMapper,mergeFunction,mapSupplier));
+  }
+}
+
+extension StringDartStream<T> on DartStream<String>{
+  String joining([String delimiter]){
+    return collect<String,String>(Collectors.joining(delimiter));
+  }
 }
 
 extension NumberDartStream<T extends num> on DartStream<T>{
