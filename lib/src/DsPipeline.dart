@@ -145,7 +145,7 @@ abstract class DsPipeline<P_IN, P_OUT> extends AbstractPipeline<P_IN, P_OUT>
 
   @override
   DartStream<P_OUT> skip(int n) {
-    return SliceOp.op(this, n, -1);
+    return SliceOp.op(this, n > 0 ? n : 0, -1);
   }
 
   @override
