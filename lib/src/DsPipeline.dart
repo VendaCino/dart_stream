@@ -138,7 +138,7 @@ abstract class DsPipeline<P_IN, P_OUT> extends AbstractPipeline<P_IN, P_OUT>
 
   @override
   DartStream<P_OUT> limit(int maxSize) {
-    return SliceOp.op(this, 0, maxSize);
+    return SliceOp.op(this, 0, maxSize > 0 ? maxSize : 0);
   }
 
   @override
