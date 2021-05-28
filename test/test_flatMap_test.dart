@@ -85,7 +85,7 @@ test('flatMap returns object', () {
 
     var result = DartStream.of([1])
         .flatMap((num) {
-            return DartStream.one(Obj2(num, num));
+            return DartStream.of([num, num]);
         })
         .toList();
 
