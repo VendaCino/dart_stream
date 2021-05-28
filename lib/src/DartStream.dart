@@ -12,6 +12,12 @@ mixin DartStream<T> {
   static DartStream<R> empty<R>(){
     return Head<R,R>.source(EmptyIterator<R>(), 0);
   }
+
+  static DartStream<int> range(int start,int end){
+    var list = List.filled(end-start, 0);
+    for(int i=0;i<list.length;++i) list[i]=i+start;
+    return Head<int,int>.source(ArrayIterator<int>(list), 0);
+  }
   // -----Operation-------
 
   DartStream<T> filter(Predicate<T> predicate);
@@ -86,5 +92,11 @@ extension NumberDartStream<T extends num> on DartStream<T>{
     });
     if(r[0]==0) return null;
     else return r[1]/r[0];
+  }
+}
+
+extension ToStreamList<T> on List<T>{
+  DartStream<T> toStream(){
+    return DartStream.of(this);
   }
 }
