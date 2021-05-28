@@ -106,12 +106,14 @@ abstract class DsPipeline<P_IN, P_OUT> extends AbstractPipeline<P_IN, P_OUT>
   }
 
   @override
-  P_OUT max(Comparator<P_OUT> comparator) {
+  P_OUT max([Comparator<P_OUT> comparator]) {
+    if(comparator==null) comparator = SortedOp.natureComparator;
     return reduce0((a, b) => comparator(a, b) >= 0 ? a : b);
   }
 
   @override
-  P_OUT min(Comparator<P_OUT> comparator) {
+  P_OUT min([Comparator<P_OUT> comparator]) {
+    if(comparator==null) comparator = SortedOp.natureComparator;
     return reduce0((a, b) => comparator(a, b) <= 0 ? a : b);
   }
 

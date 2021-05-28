@@ -39,9 +39,9 @@ mixin DartStream<T> {
 
   R collect<R,A>(Collector<T,A,R> collector);
 
-  T min(Comparator<T> comparator);
+  T min([Comparator<T> comparator]);
 
-  T max(Comparator<T> comparator);
+  T max([Comparator<T> comparator]);
 
   int count();
 
