@@ -64,7 +64,6 @@ class NoSeedReducingSink<T> extends TerminalSink<T, T>{
     } else {
       state = operator(state, t);
     }
-    state = operator(state,t);
   }
 
 }
