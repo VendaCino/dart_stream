@@ -40,8 +40,9 @@ abstract class AbstractPipeline<E_IN, E_OUT> extends PipelineHelper<E_OUT> {
     return terminalOp.evaluate(this, sourceIterator);
   }
 
-  Sink<P_IN> wrapSink<P_IN>(Sink<E_OUT> sink) {
-    assert(sink != null);
+  Sink<P_IN> wrapSink<P_IN>(Sink<E_OUT> inSink) {
+    assert(inSink != null);
+    Sink sink = inSink;
     for (AbstractPipeline p = this; p.depth > 0; p = p.previousStage) {
       sink = p.opWrapSink(p.previousStage.combinedFlags, sink);
     }

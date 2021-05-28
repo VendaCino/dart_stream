@@ -47,4 +47,5 @@ void main(){
       .sorted((o1,o2)=>o2-o1).toList());
 
   print(DartStream.of([3,2,1]).map((t) => t-1).sorted().toList());
+  print(DartStream.of([3,2,1]).map((t) => t-1).sorted().map((t) => t.toString()+"!").toList());
 }
