@@ -58,6 +58,12 @@ mixin DartStream<T> {
   void forEach(Consumer<T> action);
 }
 
+extension ExtendDartStream<T> on DartStream<T>{
+  DartStream<T> slice(int start,int end){
+    assert (end >= start);
+    return skip(start).limit(end-start);
+  }
+}
 
 extension NumberDartStream<T extends num> on DartStream<T>{
   T sum(){
