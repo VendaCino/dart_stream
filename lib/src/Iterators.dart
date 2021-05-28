@@ -73,7 +73,7 @@ class ArrayIterator<T> extends BaseIterator<T> {
 class IteratorIterator<T> extends BaseIterator<T> {
   Iterator<T> iterator;
 
-  constructor(Iterator<T> iterator) {
+  IteratorIterator(Iterator<T> iterator) {
     this.iterator = iterator;
   }
 
@@ -91,8 +91,7 @@ class IteratorIterator<T> extends BaseIterator<T> {
 class ValueIterator<T> extends BaseIterator<T> {
   T value;
 
-  constructor(T value) {
-    this.value = value;
+  ValueIterator(this.value) {
     this.done = false;
   }
 
@@ -119,8 +118,7 @@ class ValueIterator<T> extends BaseIterator<T> {
 class EmptyIterator<T> extends BaseIterator<T> {
   T value;
 
-  constructor(T value) {
-    this.value = value;
+  EmptyIterator() {
     this.done = true;
   }
 

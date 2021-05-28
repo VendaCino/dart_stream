@@ -5,6 +5,10 @@ mixin DartStream<T> {
     return Head<R,R>.source(ArrayIterator<R>(list), 0);
   }
 
+  static DartStream<R> one<R>(R e){
+    return Head<R,R>.source(ValueIterator<R>(e), 0);
+  }
+
   static DartStream<R> empty<R>(){
     return Head<R,R>.source(EmptyIterator<R>(), 0);
   }
