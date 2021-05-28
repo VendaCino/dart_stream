@@ -1,12 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dart_stream/dart_stream.dart';
-
-class _Obj {
-  int a;
-  int b;
-
-  _Obj(this.a, this.b);
-}
+import './test_define.dart';
 
 void main() {
   test('noneMatch true', () {
@@ -40,11 +34,11 @@ void main() {
     expect(result, equals(true));
   });
   test('noneMatch sample true', () {
-    var result = DartStream.of([_Obj(1, 5), _Obj(2, 5), _Obj(3, 5)]).noneMatch((e) => e.a == 4);
+    var result = DartStream.of([Obj2(1, 5), Obj2(2, 5), Obj2(3, 5)]).noneMatch((e) => e.a == 4);
     expect(result, equals(true));
   });
   test('noneMatch sample false', () {
-    var result = DartStream.of([_Obj(1, 5), _Obj(2, 5), _Obj(3, 5)]).noneMatch((e) => e.a == 1);
+    var result = DartStream.of([Obj2(1, 5), Obj2(2, 5), Obj2(3, 5)]).noneMatch((e) => e.a == 1);
     expect(result, equals(false));
   });
   test('noneMatch sample empty', () {
