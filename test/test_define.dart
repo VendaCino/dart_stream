@@ -33,10 +33,10 @@ class Obj4 {
 class SimpleCollector<T, A, R> implements Collector<T, A, R>{
 
   @override
-  Supplier<A> supplier;
+  JSupplier<A> supplier;
 
   @override
-  BiConsumer<A, T> accumulator;
+  JBiConsumer<A, T> accumulator;
 
   @override
   JFunction<A, R> finisher;

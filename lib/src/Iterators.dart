@@ -25,7 +25,7 @@ abstract class BaseIterator<T> {
     return -1;
   }
 
-  forEachRemaining(Consumer<T> action) {
+  forEachRemaining(JConsumer<T> action) {
     while (!done) {
       T now = next();
       if (!toNil) action(now);
@@ -34,12 +34,12 @@ abstract class BaseIterator<T> {
   }
 }
 
-class ArrayIterator<T> extends BaseIterator<T> {
+class _ArrayIterator<T> extends BaseIterator<T> {
   List<T> data;
   int origin;
   int fence;
 
-  ArrayIterator(List<T> array) {
+  _ArrayIterator(List<T> array) {
     this.data = array ?? [];
     this.origin = 0;
     this.fence = this.data.length;
@@ -70,10 +70,10 @@ class ArrayIterator<T> extends BaseIterator<T> {
   }
 }
 
-class IteratorIterator<T> extends BaseIterator<T> {
+class _IteratorIterator<T> extends BaseIterator<T> {
   Iterator<T> iterator;
 
-  IteratorIterator(Iterator<T> iterator) {
+  _IteratorIterator(Iterator<T> iterator) {
     this.iterator = iterator;
   }
 
@@ -88,10 +88,10 @@ class IteratorIterator<T> extends BaseIterator<T> {
   }
 }
 
-class ValueIterator<T> extends BaseIterator<T> {
+class _ValueIterator<T> extends BaseIterator<T> {
   T value;
 
-  ValueIterator(this.value) {
+  _ValueIterator(this.value) {
     this.done = false;
   }
 
@@ -115,10 +115,10 @@ class ValueIterator<T> extends BaseIterator<T> {
   }
 }
 
-class EmptyIterator<T> extends BaseIterator<T> {
+class _EmptyIterator<T> extends BaseIterator<T> {
   T value;
 
-  EmptyIterator() {
+  _EmptyIterator() {
     this.done = true;
   }
 

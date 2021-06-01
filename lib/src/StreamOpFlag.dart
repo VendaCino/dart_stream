@@ -1,12 +1,12 @@
 part of '../dart_stream.dart';
 
-class StreamOpFlagType {
+class _StreamOpFlagType {
   final int bitPosition;
   final int set;
   final int clear;
   final int preserve;
 
-  const StreamOpFlagType(this.bitPosition, this.set, this.clear, this.preserve);
+  const _StreamOpFlagType(this.bitPosition, this.set, this.clear, this.preserve);
 
   bool isKnown(int flags) {
     return (flags & preserve) == set;
@@ -22,12 +22,12 @@ class StreamOpFlagType {
 
 }
 
-class StreamOpFlag {
-  static const StreamOpFlagType DISTINCT = StreamOpFlagType(0, 1, 2, 3);
-  static const StreamOpFlagType SORTED = StreamOpFlagType(2, 4, 8, 12);
-  static const StreamOpFlagType ORDERED = StreamOpFlagType(4, 16, 32, 48);
-  static const StreamOpFlagType SIZED = StreamOpFlagType(6, 64, 128, 192);
-  static const StreamOpFlagType SHORT_CIRCUIT = StreamOpFlagType(24, 16777216, 33554432, 50331648);
+class _StreamOpFlag {
+  static const _StreamOpFlagType DISTINCT = _StreamOpFlagType(0, 1, 2, 3);
+  static const _StreamOpFlagType SORTED = _StreamOpFlagType(2, 4, 8, 12);
+  static const _StreamOpFlagType ORDERED = _StreamOpFlagType(4, 16, 32, 48);
+  static const _StreamOpFlagType SIZED = _StreamOpFlagType(6, 64, 128, 192);
+  static const _StreamOpFlagType SHORT_CIRCUIT = _StreamOpFlagType(24, 16777216, 33554432, 50331648);
 
   static int getMask(int flags) {
     return (flags == 0)
@@ -36,7 +36,7 @@ class StreamOpFlag {
   }
 
   static int combineOpFlags(int prevCombOpFlags, int newStreamOrOpFlags) {
-    return (prevCombOpFlags & StreamOpFlag.getMask(newStreamOrOpFlags)) | newStreamOrOpFlags;
+    return (prevCombOpFlags & _StreamOpFlag.getMask(newStreamOrOpFlags)) | newStreamOrOpFlags;
   }
 
   static const int FLAG_MASK = 50331903; //0b11000000000000000011111111

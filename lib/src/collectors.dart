@@ -1,18 +1,18 @@
 part of '../dart_stream.dart';
 
 mixin Collector<T, A, R> {
-  Supplier<A> supplier;
-  BiConsumer<A, T> accumulator;
+  JSupplier<A> supplier;
+  JBiConsumer<A, T> accumulator;
   JFunction<A, R> finisher;
 }
 
 class _Collector<T, A, R> implements Collector<T, A, R>{
 
   @override
-  Supplier<A> supplier;
+  JSupplier<A> supplier;
 
   @override
-  BiConsumer<A, T> accumulator;
+  JBiConsumer<A, T> accumulator;
 
   @override
   JFunction<A, R> finisher;
@@ -33,10 +33,10 @@ class Collectors {
   }
 
   static Collector<T, Map<K, U>, Map<K, U>> toMap<T, K, U>(JFunction<T, K> keyMapper,
-      JFunction<T, U> valueMapper, [BinaryOperator<U> mergeFunction, Supplier<Map<K, U>> mapSupplier]) {
+      JFunction<T, U> valueMapper, [JBinaryOperator<U> mergeFunction, JSupplier<Map<K, U>> mapSupplier]) {
     if (mapSupplier == null) mapSupplier = () => HashMap<K, U>();
     if (mergeFunction == null) mergeFunction = (v1, v2) => throw Exception("Duplicated key");
-    BiConsumer<Map<K, U>, T> accumulator = (map, element) {
+    JBiConsumer<Map<K, U>, T> accumulator = (map, element) {
       var key = keyMapper(element);
       var value = valueMapper(element);
       if (!map.containsKey(key))

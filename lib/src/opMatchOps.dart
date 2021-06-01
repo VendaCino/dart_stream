@@ -1,19 +1,19 @@
 part of '../dart_stream.dart';
 
 
-enum MatchKind{
+enum _MatchKind{
   ANY,ALL,NONE
 }
-abstract class BooleanTerminalSink<T> extends Sink<T> {
-  static final Map<MatchKind,bool> shortCircuitResult =
-  HashMap.fromIterables([MatchKind.ANY,MatchKind.ALL,MatchKind.NONE], [true,false,false]);
-  static final Map<MatchKind,bool> stopOnPredicateMatches =
-  HashMap.fromIterables([MatchKind.ANY,MatchKind.ALL,MatchKind.NONE], [true,false,true]);
+abstract class _BooleanTerminalSink<T> extends _Sink<T> {
+  static final Map<_MatchKind,bool> shortCircuitResult =
+  HashMap.fromIterables([_MatchKind.ANY,_MatchKind.ALL,_MatchKind.NONE], [true,false,false]);
+  static final Map<_MatchKind,bool> stopOnPredicateMatches =
+  HashMap.fromIterables([_MatchKind.ANY,_MatchKind.ALL,_MatchKind.NONE], [true,false,true]);
 
   bool stop = false;
   bool value = false;
 
-  BooleanTerminalSink(MatchKind matchKind):value = !shortCircuitResult[matchKind];
+  _BooleanTerminalSink(_MatchKind matchKind):value = !shortCircuitResult[matchKind];
 
   @override
   bool cancellationRequested() {return stop;}
@@ -24,34 +24,34 @@ abstract class BooleanTerminalSink<T> extends Sink<T> {
 
 }
 
-class MatchOp<T> implements TerminalOp<T, bool>{
-  final MatchKind matchKind;
-  final Supplier<BooleanTerminalSink<T>> sinkSupplier;
+class _MatchOp<T> implements _TerminalOp<T, bool>{
+  final _MatchKind matchKind;
+  final JSupplier<_BooleanTerminalSink<T>> sinkSupplier;
 
-  MatchOp(this.matchKind, this.sinkSupplier);
+  _MatchOp(this.matchKind, this.sinkSupplier);
 
   @override
-  bool evaluate<P_IN>(PipelineHelper<T> helper, BaseIterator<P_IN> sourceIterator) {
+  bool evaluate<P_IN>(_PipelineHelper<T> helper, BaseIterator<P_IN> sourceIterator) {
     return helper.wrapAndCopyInto(sinkSupplier(), sourceIterator).getAndClearState();
   }
 
   @override
   int getOpFlag() {
-    return StreamOpFlag.IS_SHORT_CIRCUIT | StreamOpFlag.NOT_ORDERED;
+    return _StreamOpFlag.IS_SHORT_CIRCUIT | _StreamOpFlag.NOT_ORDERED;
   }
 }
 
-class DirMatchSink<T> extends BooleanTerminalSink<T>{
-  final MatchKind matchKind;
-  final Predicate<T> predicate;
-  DirMatchSink(this.matchKind, this.predicate) : super(matchKind);
+class _DirMatchSink<T> extends _BooleanTerminalSink<T>{
+  final _MatchKind matchKind;
+  final JPredicate<T> predicate;
+  _DirMatchSink(this.matchKind, this.predicate) : super(matchKind);
 
 
   @override
   void accept(T t) {
-    if (!stop && predicate(t) == BooleanTerminalSink.stopOnPredicateMatches[matchKind]) {
+    if (!stop && predicate(t) == _BooleanTerminalSink.stopOnPredicateMatches[matchKind]) {
       stop = true;
-      value = BooleanTerminalSink.shortCircuitResult[matchKind];
+      value = _BooleanTerminalSink.shortCircuitResult[matchKind];
     }
   }
 

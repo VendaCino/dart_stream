@@ -1,62 +1,61 @@
 part of '../dart_stream.dart';
 
-abstract class PipelineHelper<E_OUT> {
-  S wrapAndCopyInto<P_IN, S extends Sink<E_OUT>>(S sink, BaseIterator<P_IN> spliterator);
+abstract class _PipelineHelper<E_OUT> {
+  S wrapAndCopyInto<P_IN, S extends _Sink<E_OUT>>(S sink, BaseIterator<P_IN> spliterator);
 }
 
-abstract class AbstractPipeline<E_IN, E_OUT> extends PipelineHelper<E_OUT> {
+abstract class _AbstractPipeline<E_IN, E_OUT> extends _PipelineHelper<E_OUT> {
   static const String MSG_STREAM_LINKED = "stream has already been operated upon or closed";
-  static const String MSG_CONSUMED = "source already consumed or closed";
 
   bool linkedOrConsumed = false;
   BaseIterator<dynamic> sourceIterator;
   int combinedFlags;
   int depth;
-  final AbstractPipeline previousStage;
-  AbstractPipeline nextStage;
+  final _AbstractPipeline previousStage;
+  _AbstractPipeline nextStage;
 
 
-  AbstractPipeline.op(this.previousStage, int opFlags){
+  _AbstractPipeline.op(this.previousStage, int opFlags){
     if (previousStage.linkedOrConsumed) throw new Exception(MSG_STREAM_LINKED);
     previousStage.linkedOrConsumed = true;
     previousStage.nextStage = this;
     sourceIterator = previousStage.sourceIterator;
 
-    this.combinedFlags = StreamOpFlag.combineOpFlags(opFlags, previousStage.combinedFlags);
+    this.combinedFlags = _StreamOpFlag.combineOpFlags(opFlags, previousStage.combinedFlags);
     this.depth = previousStage.depth + 1;
   }
 
-  AbstractPipeline.source(this.sourceIterator,int sourceFlags)
+  _AbstractPipeline.source(this.sourceIterator,int sourceFlags)
       :previousStage=null, depth=0,combinedFlags=0x0;
 
-  Sink<E_IN> opWrapSink(int flags,Sink<E_OUT> sink);
+  _Sink<E_IN> opWrapSink(int flags,_Sink<E_OUT> sink);
 
-  R evaluate<R>(TerminalOp<E_OUT, R> terminalOp) {
+  R evaluate<R>(_TerminalOp<E_OUT, R> terminalOp) {
     if (linkedOrConsumed) throw new Exception(MSG_STREAM_LINKED);
     linkedOrConsumed = true;
 
     var terminalFlags = terminalOp.getOpFlag();
-    if(terminalFlags!=0) combinedFlags = StreamOpFlag.combineOpFlags(terminalFlags, combinedFlags);
+    if(terminalFlags!=0) combinedFlags = _StreamOpFlag.combineOpFlags(terminalFlags, combinedFlags);
     return terminalOp.evaluate(this, sourceIterator);
   }
 
-  Sink<P_IN> wrapSink<P_IN>(Sink<E_OUT> inSink) {
+  _Sink<P_IN> wrapSink<P_IN>(_Sink<E_OUT> inSink) {
     assert(inSink != null);
-    Sink sink = inSink;
-    for (AbstractPipeline p = this; p.depth > 0; p = p.previousStage) {
+    _Sink sink = inSink;
+    for (_AbstractPipeline p = this; p.depth > 0; p = p.previousStage) {
       sink = p.opWrapSink(p.previousStage.combinedFlags, sink);
     }
-    return sink as Sink<P_IN>;
+    return sink as _Sink<P_IN>;
   }
 
-  S wrapAndCopyInto<P_IN, S extends Sink<E_OUT>>(S sink, BaseIterator<P_IN> spliterator){
+  S wrapAndCopyInto<P_IN, S extends _Sink<E_OUT>>(S sink, BaseIterator<P_IN> spliterator){
     copyInto(wrapSink(sink), spliterator);
     return sink;
   }
 
-  void copyInto<P_IN> (Sink<P_IN> wrappedSink, BaseIterator<P_IN> spliterator) {
+  void copyInto<P_IN> (_Sink<P_IN> wrappedSink, BaseIterator<P_IN> spliterator) {
 
-    if (!StreamOpFlag.SHORT_CIRCUIT.isKnown(combinedFlags)) {
+    if (!_StreamOpFlag.SHORT_CIRCUIT.isKnown(combinedFlags)) {
       wrappedSink.begin(spliterator.getExactSizeIfKnown());
       spliterator.forEachRemaining((t)=>wrappedSink.accept(t));
       wrappedSink.end();
@@ -66,8 +65,8 @@ abstract class AbstractPipeline<E_IN, E_OUT> extends PipelineHelper<E_OUT> {
     }
   }
 
-  void copyIntoWithCancel<P_IN> (Sink<P_IN> wrappedSink, BaseIterator<P_IN> spliterator) {
-    AbstractPipeline p = this;
+  void copyIntoWithCancel<P_IN> (_Sink<P_IN> wrappedSink, BaseIterator<P_IN> spliterator) {
+    _AbstractPipeline p = this;
     while (p.depth > 0) {
       p = p.previousStage;
     }
@@ -76,7 +75,7 @@ abstract class AbstractPipeline<E_IN, E_OUT> extends PipelineHelper<E_OUT> {
     wrappedSink.end();
   }
 
-  void forEachWithCancel(BaseIterator<E_OUT> it, Sink<E_OUT> sink) {
+  void forEachWithCancel(BaseIterator<E_OUT> it, _Sink<E_OUT> sink) {
     while(!it.done) {
       if(sink.cancellationRequested()){
         return;

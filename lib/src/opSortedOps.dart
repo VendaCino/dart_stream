@@ -1,6 +1,6 @@
 part of '../dart_stream.dart';
 
-class SortedOp<T> extends DsPipeline<T, T> {
+class _SortedOp<T> extends _DsPipeline<T, T> {
   static final Comparator<dynamic> natureComparator=(dynamic o1,dynamic o2){
     if(o1 is num && o2 is num) return o1-o2;
     else return 0;
@@ -8,24 +8,24 @@ class SortedOp<T> extends DsPipeline<T, T> {
 
   final Comparator<T> comparator;
   final bool isNaturalSort;
-  SortedOp(AbstractPipeline previousStage, this.comparator, this.isNaturalSort) : super.op(previousStage, StreamOpFlag.IS_ORDERED | StreamOpFlag.IS_SORTED);
+  _SortedOp(_AbstractPipeline previousStage, this.comparator, this.isNaturalSort) : super.op(previousStage, _StreamOpFlag.IS_ORDERED | _StreamOpFlag.IS_SORTED);
 
   @override
-  Sink<T> opWrapSink(int flags, Sink<T> sink) {
-    if (StreamOpFlag.SORTED.isKnown(flags) && isNaturalSort)
+  _Sink<T> opWrapSink(int flags, _Sink<T> sink) {
+    if (_StreamOpFlag.SORTED.isKnown(flags) && isNaturalSort)
       return sink;
-    else if (StreamOpFlag.SIZED.isKnown(flags))
-      return SizedSortingSink<T>(sink, comparator);
+    else if (_StreamOpFlag.SIZED.isKnown(flags))
+      return _SizedSortingSink<T>(sink, comparator);
     else
-      return SortingSink<T>(sink, comparator);
+      return _SortingSink<T>(sink, comparator);
   }
 }
 
-abstract class AbstractSortingSink<T> extends ChainedSink<T, T> {
+abstract class _AbstractSortingSink<T> extends _ChainedSink<T, T> {
    final Comparator<T> comparator;
    bool cancellationRequestedCalled = false;
 
-   AbstractSortingSink(Sink< T> downstream, this.comparator) :super(downstream, null);
+   _AbstractSortingSink(_Sink< T> downstream, this.comparator) :super(downstream, null);
 
   @override
   bool cancellationRequested() {
@@ -34,11 +34,11 @@ abstract class AbstractSortingSink<T> extends ChainedSink<T, T> {
   }
 }
 
-class SizedSortingSink<T> extends AbstractSortingSink<T>{
+class _SizedSortingSink<T> extends _AbstractSortingSink<T>{
   List<T> array;
   int offset;
 
-  SizedSortingSink(Sink<T> downstream, Comparator<T> comparator) : super(downstream, comparator);
+  _SizedSortingSink(_Sink<T> downstream, Comparator<T> comparator) : super(downstream, comparator);
 
   @override
   void begin(int size) {
@@ -67,10 +67,10 @@ class SizedSortingSink<T> extends AbstractSortingSink<T>{
   }
 }
 
-class SortingSink<T> extends AbstractSortingSink<T>{
+class _SortingSink<T> extends _AbstractSortingSink<T>{
   List<T> list;
 
-  SortingSink(Sink<T> downstream, Comparator<T> comparator) : super(downstream, comparator);
+  _SortingSink(_Sink<T> downstream, Comparator<T> comparator) : super(downstream, comparator);
 
   @override
   void begin(int size) {

@@ -25,7 +25,7 @@ part 'src/collectors.dart';
 
 
 void main(){
-  var head = Head<int,int>.source(ArrayIterator<int>([1,2,3]), 0);
+  var head = _Head<int,int>.source(_ArrayIterator<int>([1,2,3]), 0);
   var findFirst = head.map((t) => t+1).findFirst();
   print(findFirst);
 

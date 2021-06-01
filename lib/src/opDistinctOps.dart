@@ -1,23 +1,23 @@
 part of '../dart_stream.dart';
 
-class DistinctOp<T> extends DsPipeline<T, T> {
-  DistinctOp(AbstractPipeline previousStage) : super.op(previousStage, StreamOpFlag.IS_ORDERED | StreamOpFlag.IS_SORTED);
+class _DistinctOp<T> extends _DsPipeline<T, T> {
+  _DistinctOp(_AbstractPipeline previousStage) : super.op(previousStage, _StreamOpFlag.IS_ORDERED | _StreamOpFlag.IS_SORTED);
 
   @override
-  Sink<T> opWrapSink(int flags, Sink<T> sink) {
-    if (StreamOpFlag.DISTINCT.isKnown(flags)) {
+  _Sink<T> opWrapSink(int flags, _Sink<T> sink) {
+    if (_StreamOpFlag.DISTINCT.isKnown(flags)) {
       return sink;
-    } else if (StreamOpFlag.SORTED.isKnown(flags)){
-      return DistinctSinkSorted(sink);
+    } else if (_StreamOpFlag.SORTED.isKnown(flags)){
+      return _DistinctSinkSorted(sink);
     } else {
-      return DistinctSinkNotSorted(sink);
+      return _DistinctSinkNotSorted(sink);
     }
   }
 
 }
 
-class DistinctSinkSorted<T> extends ChainedSink<T,T>{
-  DistinctSinkSorted(Sink<T> downstream) : super(downstream, null);
+class _DistinctSinkSorted<T> extends _ChainedSink<T,T>{
+  _DistinctSinkSorted(_Sink<T> downstream) : super(downstream, null);
   bool seenNull = false;
   T lastSeen;
 
@@ -49,8 +49,8 @@ class DistinctSinkSorted<T> extends ChainedSink<T,T>{
   
 }
 
-class DistinctSinkNotSorted<T> extends ChainedSink<T,T>{
-  DistinctSinkNotSorted(Sink<T> downstream) : super(downstream, null);
+class _DistinctSinkNotSorted<T> extends _ChainedSink<T,T>{
+  _DistinctSinkNotSorted(_Sink<T> downstream) : super(downstream, null);
   Set<T> seen;
   T lastSeen;
 

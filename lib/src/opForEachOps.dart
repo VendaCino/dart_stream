@@ -1,10 +1,10 @@
 part of '../dart_stream.dart';
 
-class ForEachOp<T>
-    extends  TerminalSink<T, Null> implements TerminalOp<T, Null>{
-  final Consumer<T> action;
+class _ForEachOp<T>
+    extends  _TerminalSink<T, Null> implements _TerminalOp<T, Null>{
+  final JConsumer<T> action;
 
-  ForEachOp(this.action);
+  _ForEachOp(this.action);
 
   @override
   void accept(T t) {
@@ -12,8 +12,8 @@ class ForEachOp<T>
   }
 
   @override
-  Null evaluate<P_IN>(PipelineHelper<T> helper, BaseIterator<P_IN> sourceIterator) {
-    return helper.wrapAndCopyInto<P_IN,TerminalSink<T, Null>>(this, sourceIterator).get();
+  Null evaluate<P_IN>(_PipelineHelper<T> helper, BaseIterator<P_IN> sourceIterator) {
+    return helper.wrapAndCopyInto<P_IN,_TerminalSink<T, Null>>(this, sourceIterator).get();
   }
 
   @override

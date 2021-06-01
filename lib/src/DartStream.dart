@@ -2,25 +2,25 @@ part of '../dart_stream.dart';
 
 mixin DartStream<T> {
   static DartStream<R> of<R>(List<R> list){
-    return Head<R,R>.source(ArrayIterator<R>(list), 0);
+    return _Head<R,R>.source(_ArrayIterator<R>(list), 0);
   }
 
   static DartStream<R> one<R>(R e){
-    return Head<R,R>.source(ValueIterator<R>(e), 0);
+    return _Head<R,R>.source(_ValueIterator<R>(e), 0);
   }
 
   static DartStream<R> empty<R>(){
-    return Head<R,R>.source(EmptyIterator<R>(), 0);
+    return _Head<R,R>.source(_EmptyIterator<R>(), 0);
   }
 
   static DartStream<int> range(int start,int end){
     var list = List.filled(end-start, 0);
     for(int i=0;i<list.length;++i) list[i]=i+start;
-    return Head<int,int>.source(ArrayIterator<int>(list), 0);
+    return _Head<int,int>.source(_ArrayIterator<int>(list), 0);
   }
   // -----Operation-------
 
-  DartStream<T> filter(Predicate<T> predicate);
+  DartStream<T> filter(JPredicate<T> predicate);
 
   DartStream<R> map<R>(JFunction<T, R> mapper);
 
@@ -30,7 +30,7 @@ mixin DartStream<T> {
 
   DartStream<T> sorted([Comparator<T> comparator]);
 
-  DartStream<T> peek(Consumer<T> action);
+  DartStream<T> peek(JConsumer<T> action);
 
   DartStream<T> limit(int maxSize);
 
@@ -39,9 +39,9 @@ mixin DartStream<T> {
 // -----Terminal Operation-------
   List<T> toList();
 
-  T reduce0(BinaryOperator<T> accumulator);
+  T reduce0(JBinaryOperator<T> accumulator);
 
-  R reduce<R>(R identity, BiFunction<R, T, R> accumulator);
+  R reduce<R>(R identity, JBiFunction<R, T, R> accumulator);
 
   R collect<R,A>(Collector<T,A,R> collector);
 
@@ -51,17 +51,17 @@ mixin DartStream<T> {
 
   int count();
 
-  bool anyMatch(Predicate<T> predicate);
+  bool anyMatch(JPredicate<T> predicate);
 
-  bool allMatch(Predicate<T> predicate);
+  bool allMatch(JPredicate<T> predicate);
 
-  bool noneMatch(Predicate<T> predicate);
+  bool noneMatch(JPredicate<T> predicate);
 
   T findFirst();
 
   T findAny();
 
-  void forEach(Consumer<T> action);
+  void forEach(JConsumer<T> action);
 }
 
 extension ExtendDartStream<T> on DartStream<T>{
@@ -70,7 +70,7 @@ extension ExtendDartStream<T> on DartStream<T>{
     return skip(start).limit(end-start);
   }
   Map<K, U> toMap<K,U>(JFunction<T, K> keyMapper,
-      JFunction<T, U> valueMapper, [BinaryOperator<U> mergeFunction, Supplier<Map<K, U>> mapSupplier]){
+      JFunction<T, U> valueMapper, [JBinaryOperator<U> mergeFunction, JSupplier<Map<K, U>> mapSupplier]){
     return collect(Collectors.toMap(keyMapper,valueMapper,mergeFunction,mapSupplier));
   }
 }

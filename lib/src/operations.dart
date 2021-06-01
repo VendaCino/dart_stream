@@ -1,28 +1,28 @@
 part of '../dart_stream.dart';
 
-typedef WrapSinkFunction<E_IN, E_OUT> = Sink<E_IN> Function(int, Sink<E_OUT>);
+typedef _WrapSinkFunction<E_IN, E_OUT> = _Sink<E_IN> Function(int, _Sink<E_OUT>);
 
-class StatelessOp<E_IN, E_OUT> extends DsPipeline<E_IN, E_OUT> {
-  final WrapSinkFunction wrapSinkFunction;
+class _StatelessOp<E_IN, E_OUT> extends _DsPipeline<E_IN, E_OUT> {
+  final _WrapSinkFunction wrapSinkFunction;
 
-  StatelessOp.op(
-      AbstractPipeline previousStage, int opFlags, this.wrapSinkFunction)
+  _StatelessOp.op(
+      _AbstractPipeline previousStage, int opFlags, this.wrapSinkFunction)
       : super.op(previousStage, opFlags);
 
   @override
-  Sink<E_IN> opWrapSink(int flags, Sink<E_OUT> sink) {
+  _Sink<E_IN> opWrapSink(int flags, _Sink<E_OUT> sink) {
     return wrapSinkFunction(flags,sink);
   }
 }
 
-mixin TerminalOp<E_IN, R> {
+mixin _TerminalOp<E_IN, R> {
   R evaluate<P_IN>(
-      PipelineHelper<E_IN> helper, BaseIterator<P_IN> sourceIterator);
+      _PipelineHelper<E_IN> helper, BaseIterator<P_IN> sourceIterator);
 
   int getOpFlag();
 }
 
-abstract class TerminalSink<T, O> extends Sink<T> {
+abstract class _TerminalSink<T, O> extends _Sink<T> {
   O get();
 }
 

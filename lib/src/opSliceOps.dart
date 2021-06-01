@@ -1,7 +1,7 @@
 part of '../dart_stream.dart';
 
-class SliceSink<T> extends ChainedSink<T, T> {
-  SliceSink(Sink<T> downstream, int this.skip, int this.limit)
+class _SliceSink<T> extends _ChainedSink<T, T> {
+  _SliceSink(_Sink<T> downstream, int this.skip, int this.limit)
       : n = skip,
         m = limit >= 0 ? limit : 0x7fffffffffffffff,
         super(downstream, null);
@@ -37,19 +37,19 @@ class SliceSink<T> extends ChainedSink<T, T> {
   }
 }
 
-class SliceOp<T> extends DsPipeline<T, T> {
+class _SliceOp<T> extends _DsPipeline<T, T> {
   final int _skip;
   final int _limit;
 
   static int flags(int limit) {
-    return StreamOpFlag.NOT_SIZED | ((limit != -1) ? StreamOpFlag.IS_SHORT_CIRCUIT : 0);
+    return _StreamOpFlag.NOT_SIZED | ((limit != -1) ? _StreamOpFlag.IS_SHORT_CIRCUIT : 0);
   }
 
-  SliceOp.op(AbstractPipeline previousStage, this._skip, this._limit)
+  _SliceOp.op(_AbstractPipeline previousStage, this._skip, this._limit)
       : super.op(previousStage, flags(_limit));
 
   @override
-  Sink<T> opWrapSink(int flags, Sink<T> sink) {
-    return SliceSink<T>(sink, _skip, _limit);
+  _Sink<T> opWrapSink(int flags, _Sink<T> sink) {
+    return _SliceSink<T>(sink, _skip, _limit);
   }
 }
