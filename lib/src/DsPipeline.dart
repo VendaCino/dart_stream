@@ -163,6 +163,11 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
   void forEach(JConsumer<P_OUT> action) {
     evaluate(_ForEachOp(action));
   }
+
+  @override
+  DartStream<P_OUT> shuffle(){
+    return _ShuffleOp(this);
+  }
 }
 
 class _Head<P_IN, P_OUT> extends _DsPipeline<P_IN, P_OUT> {

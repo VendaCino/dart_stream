@@ -20,5 +20,6 @@ part 'src/opForEachOps.dart';
 part 'src/opSliceOps.dart';
 part 'src/opDistinctOps.dart';
 part 'src/opSortedOps.dart';
+part 'src/opShuffleOps.dart';
 part 'src/collectors.dart';
 

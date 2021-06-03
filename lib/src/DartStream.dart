@@ -36,6 +36,8 @@ mixin DartStream<T> {
 
   DartStream<T> skip(int n);
 
+  DartStream<T> shuffle();
+
 // -----Terminal Operation-------
   List<T> toList();
 
