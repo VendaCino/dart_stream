@@ -1,9 +1,9 @@
 name: dart_stream
-description: A collection util inspired by java stream.
+description: A collection util can process list by some operation like flatMap distinct shuffle and reduce. Taking ispiration from java stream
 homepage: https://github.com/VendaCino/dart_stream
 repository: https://github.com/VendaCino/dart_stream
 
-version: 0.0.1
+version: 0.0.2
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

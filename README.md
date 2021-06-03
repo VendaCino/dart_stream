@@ -21,7 +21,7 @@ void main() {
 ```
 
 ### Todo List
-- [ ] : shuffle
+- [x] : shuffle
 - [ ] : reverse
 - [ ] : takeWhile
 - [ ] : dropWhile
