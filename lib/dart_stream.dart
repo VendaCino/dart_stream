@@ -22,4 +22,5 @@ part 'src/opDistinctOps.dart';
 part 'src/opSortedOps.dart';
 part 'src/opShuffleOps.dart';
 part 'src/collectors.dart';
+part 'src/extFutureStream.dart';
 

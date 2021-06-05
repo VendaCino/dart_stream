@@ -1,12 +1,13 @@
 
 import 'package:dart_stream/dart_stream.dart';
+
 class Item {
   String name;
   int num;
 
   Item(this.name, this.num);
 }
-void main(){
+Future<void> main() async {
   print(DartStream.of([1,2,3]).map((t) => t-1).allMatch((t) => t>0));
   print(DartStream.of([1,2,3]).map((t) => t-1).sum());
   print(DartStream.of([1.5,2.5,3.5]).map((t) => t-1).sum());
@@ -39,5 +40,8 @@ void main(){
   print(names);
 
   print([1,2,3].toStream().shuffle().toList());
-
+  var result = await [1,2,3].toStream()
+      .map((t) => Future.delayed(Duration(seconds:4-t),()=>t))
+      .anyOf();
+  print(result);
 }
