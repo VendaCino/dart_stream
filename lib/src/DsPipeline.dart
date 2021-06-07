@@ -172,6 +172,15 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
   DartStream<P_OUT> reverse(){
     return _ReverseOp(this);
   }
+
+  DartStream<P_OUT> takeWhile(JPredicate<P_OUT> predicate){
+    return _TakeWhileOp(this, predicate);
+  }
+
+  DartStream<P_OUT> dropWhile(JPredicate<P_OUT> predicate){
+    return _DropWhileOp(this, predicate);
+  }
+
 }
 
 class _Head<P_IN, P_OUT> extends _DsPipeline<P_IN, P_OUT> {

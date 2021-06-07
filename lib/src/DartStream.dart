@@ -40,6 +40,10 @@ mixin DartStream<T> {
 
   DartStream<T> reverse();
 
+  DartStream<T> takeWhile(JPredicate<T> predicate);
+
+  DartStream<T> dropWhile(JPredicate<T> predicate);
+
 // -----Terminal Operation-------
   List<T> toList();
 
