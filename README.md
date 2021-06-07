@@ -22,9 +22,11 @@ void main() {
 
 ### Todo List
 - [x] : shuffle
-- [ ] : reverse
-- [ ] : takeWhile
-- [ ] : dropWhile
+- [x] : reverse
+- [x] : takeWhile
+- [x] : dropWhile
+- [ ] : more unit test
+- [ ] : more async method
 
 ### License
 
