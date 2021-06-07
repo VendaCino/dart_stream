@@ -38,6 +38,8 @@ mixin DartStream<T> {
 
   DartStream<T> shuffle();
 
+  DartStream<T> reverse();
+
 // -----Terminal Operation-------
   List<T> toList();
 

@@ -168,6 +168,10 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
   DartStream<P_OUT> shuffle(){
     return _ShuffleOp(this);
   }
+
+  DartStream<P_OUT> reverse(){
+    return _ReverseOp(this);
+  }
 }
 
 class _Head<P_IN, P_OUT> extends _DsPipeline<P_IN, P_OUT> {
