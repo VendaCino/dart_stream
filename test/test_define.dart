@@ -36,7 +36,7 @@ class SimpleCollector<T, A, R> implements Collector<T, A, R>{
   JSupplier<A> supplier;
 
   @override
-  JBiConsumer<A, T> accumulator;
+  JBiFunction<A, T, A> accumulator;
 
   @override
   JFunction<A, R> finisher;

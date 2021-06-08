@@ -21,7 +21,7 @@ abstract class BaseIterator<T> {
     return (characteristics() & SIZED) == 0 ? -1 : estimateSize();
   }
 
-  estimateSize() {
+  int estimateSize() {
     return -1;
   }
 
@@ -65,7 +65,7 @@ class _ArrayIterator<T> extends BaseIterator<T> {
   }
 
   @override
-  estimateSize() {
+  int estimateSize() {
     return data?.length??-1;
   }
 }
@@ -110,7 +110,7 @@ class _ValueIterator<T> extends BaseIterator<T> {
   }
 
   @override
-  estimateSize() {
+  int estimateSize() {
     return 1;
   }
 }
@@ -132,7 +132,7 @@ class _EmptyIterator<T> extends BaseIterator<T> {
   }
 
   @override
-  estimateSize() {
+  int estimateSize() {
     return 0;
   }
 }

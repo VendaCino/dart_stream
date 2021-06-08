@@ -2,7 +2,7 @@ part of '../dart_stream.dart';
 
 mixin Collector<T, A, R> {
   JSupplier<A> supplier;
-  JBiConsumer<A, T> accumulator;
+  JBiFunction<A, T, A> accumulator;
   JFunction<A, R> finisher;
 }
 
@@ -12,7 +12,7 @@ class _Collector<T, A, R> implements Collector<T, A, R>{
   JSupplier<A> supplier;
 
   @override
-  JBiConsumer<A, T> accumulator;
+  JBiFunction<A, T, A> accumulator;
 
   @override
   JFunction<A, R> finisher;

@@ -26,7 +26,7 @@ abstract class _AbstractPipeline<E_IN, E_OUT> extends _PipelineHelper<E_OUT> {
   }
 
   _AbstractPipeline.source(this.sourceIterator,int sourceFlags)
-      :previousStage=null, depth=0,combinedFlags=0x0;
+      :previousStage=null, depth=0,combinedFlags=sourceFlags;
 
   _Sink<E_IN> opWrapSink(int flags,_Sink<E_OUT> sink);
 
