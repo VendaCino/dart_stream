@@ -5,7 +5,7 @@ typedef _WrapSinkFunction<E_IN, E_OUT> = _Sink<E_IN> Function(int, _Sink<E_OUT>)
 class _StatelessOp<E_IN, E_OUT> extends _DsPipeline<E_IN, E_OUT> {
   final _WrapSinkFunction wrapSinkFunction;
 
-  _StatelessOp.op(
+  _StatelessOp(
       _AbstractPipeline previousStage, int opFlags, this.wrapSinkFunction)
       : super.op(previousStage, opFlags);
 
@@ -15,11 +15,12 @@ class _StatelessOp<E_IN, E_OUT> extends _DsPipeline<E_IN, E_OUT> {
   }
 }
 
-mixin _TerminalOp<E_IN, R> {
-  R evaluate<P_IN>(
-      _PipelineHelper<E_IN> helper, BaseIterator<P_IN> sourceIterator);
+abstract class _TerminalOp<E_IN, R> {
+  int getOpFlag() {
+    return 0;
+  }
 
-  int getOpFlag();
+  _TerminalSink<E_IN, R> makeSink();
 }
 
 abstract class _TerminalSink<T, O> extends _Sink<T> {

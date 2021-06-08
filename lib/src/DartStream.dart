@@ -2,21 +2,21 @@ part of '../dart_stream.dart';
 
 mixin DartStream<T> {
   static DartStream<R> of<R>(List<R> list){
-    return _Head<R,R>.source(_ArrayIterator<R>(list), 0);
+    return _Head<R,R>.source(_ArrayIterator<R>(list), _OpFlag.IS_SIZED);
   }
 
   static DartStream<R> one<R>(R e){
-    return _Head<R,R>.source(_ValueIterator<R>(e), 0);
+    return _Head<R,R>.source(_ValueIterator<R>(e), _OpFlag.IS_SIZED);
   }
 
   static DartStream<R> empty<R>(){
-    return _Head<R,R>.source(_EmptyIterator<R>(), 0);
+    return _Head<R,R>.source(_EmptyIterator<R>(), _OpFlag.IS_SIZED);
   }
 
-  static DartStream<int> range(int start,int end){
+  static DartStream<int> range(int start, int end){
     var list = List.filled(end-start, 0);
     for(int i=0;i<list.length;++i) list[i]=i+start;
-    return _Head<int,int>.source(_ArrayIterator<int>(list), 0);
+    return _Head<int,int>.source(_ArrayIterator<int>(list), _OpFlag.IS_SIZED);
   }
   // -----Operation-------
 

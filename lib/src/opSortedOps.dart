@@ -8,78 +8,48 @@ class _SortedOp<T> extends _DsPipeline<T, T> {
 
   final Comparator<T> comparator;
   final bool isNaturalSort;
-  _SortedOp(_AbstractPipeline previousStage, this.comparator, this.isNaturalSort) : super.op(previousStage, _StreamOpFlag.IS_ORDERED | _StreamOpFlag.IS_SORTED);
+  _SortedOp(_AbstractPipeline previousStage, this.comparator, this.isNaturalSort) : super.op(previousStage,  _OpFlag.IS_SORTED);
 
   @override
   _Sink<T> opWrapSink(int flags, _Sink<T> sink) {
-    if (_StreamOpFlag.SORTED.isKnown(flags) && isNaturalSort)
+    if (_OpFlag.SORTED.isKnown(flags) && isNaturalSort)
       return sink;
-    else if (_StreamOpFlag.SIZED.isKnown(flags))
-      return _SizedSortingSink<T>(sink, comparator);
+    else if (_OpFlag.SIZED.isKnown(flags))
+      return _SortedSink<T>(sink, comparator, true);
     else
-      return _SortingSink<T>(sink, comparator);
+      return _SortedSink<T>(sink, comparator, false);
   }
 }
 
-abstract class _AbstractSortingSink<T> extends _ChainedSink<T, T> {
-   final Comparator<T> comparator;
-   bool cancellationRequestedCalled = false;
+class _SortedSink<T> extends _ChainedSink<T, T> {
+  final Comparator<T> comparator;
+  final bool sized;
+  bool cancellationRequestedCalled = false;
+  List<T> list;
+  int offset = 0;
 
-   _AbstractSortingSink(_Sink< T> downstream, this.comparator) :super(downstream, null);
+  _SortedSink(_Sink<T> downstream, this.comparator, this.sized)
+      : super(downstream, null);
 
   @override
   bool cancellationRequested() {
-  cancellationRequestedCalled = true;
-  return false;
+    cancellationRequestedCalled = true;
+    return false;
   }
-}
-
-class _SizedSortingSink<T> extends _AbstractSortingSink<T>{
-  List<T> array;
-  int offset;
-
-  _SizedSortingSink(_Sink<T> downstream, Comparator<T> comparator) : super(downstream, comparator);
 
   @override
   void begin(int size) {
-    array = List.filled(size,null, growable: false);
+    if(sized) list = List.filled(size,null, growable: false);
+    else list = List.empty(growable: true);
+  }
+
+  void onEndSort(){
+    list.sort(this.comparator);
   }
 
   @override
   void end() {
-    array.sort(this.comparator);
-    downstream.begin(offset);
-    if (!cancellationRequestedCalled) {
-      for (int i = 0; i < offset; i++)
-        downstream.accept(array[i]);
-    }
-    else {
-      for (int i = 0; i < offset && !downstream.cancellationRequested(); i++)
-        downstream.accept(array[i]);
-    }
-    downstream.end();
-    array = null;
-  }
-
-  @override
-  void accept(T t) {
-    array[offset++] = t;
-  }
-}
-
-class _SortingSink<T> extends _AbstractSortingSink<T>{
-  List<T> list;
-
-  _SortingSink(_Sink<T> downstream, Comparator<T> comparator) : super(downstream, comparator);
-
-  @override
-  void begin(int size) {
-    list = List.empty(growable: true);
-  }
-
-  @override
-  void end() {
-    list.sort(comparator);
+    onEndSort();
     downstream.begin(list.length);
     if (!cancellationRequestedCalled) {
       list.forEach((e)=>downstream.accept(e));
@@ -96,6 +66,7 @@ class _SortingSink<T> extends _AbstractSortingSink<T>{
 
   @override
   void accept(T t) {
-    list.add(t);
+    if(sized) list[offset++] = t;
+    else list.add(t);
   }
 }

@@ -1,24 +1,20 @@
 part of '../dart_stream.dart';
 
 
-class _ReduceOp<T, R, S extends _TerminalSink<T, R>> implements _TerminalOp<T, R> {
+class _ReduceOp<T, R, S extends _TerminalSink<T, R>> extends _TerminalOp<T, R> {
+  final R seed;
+  final JBiFunction<R, T, R> reducer;
 
-  final JSupplier<S> sinkSupplier;
-
-  _ReduceOp(this.sinkSupplier);
-
-  @override
-  R evaluate<P_IN>(_PipelineHelper<T> helper, BaseIterator<P_IN> sourceIterator) {
-    return helper.wrapAndCopyInto(sinkSupplier(), sourceIterator).get();
-  }
+  _ReduceOp(this.reducer, [this.seed]);
 
   @override
-  int getOpFlag() {
-    return 0;
+  _TerminalSink<T, R> makeSink() {
+    if(seed!=null) return new _HasSeedReducingSink<T, R>(seed, reducer);
+    else return new _NoSeedReducingSink<R>(reducer as JBinaryOperator<R>) as _TerminalSink<T, R>;
   }
 }
 
-class _HasSeedReducingSink<T,R> extends _TerminalSink<T, R>{
+class _HasSeedReducingSink<T, R> extends _TerminalSink<T, R> {
   R state;
   R seed;
   final JBiFunction<R, T, R> reducer;

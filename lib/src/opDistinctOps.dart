@@ -1,13 +1,13 @@
 part of '../dart_stream.dart';
 
 class _DistinctOp<T> extends _DsPipeline<T, T> {
-  _DistinctOp(_AbstractPipeline previousStage) : super.op(previousStage, _StreamOpFlag.IS_ORDERED | _StreamOpFlag.IS_SORTED);
+  _DistinctOp(_AbstractPipeline previousStage) : super.op(previousStage,  _OpFlag.IS_DISTINCT);
 
   @override
   _Sink<T> opWrapSink(int flags, _Sink<T> sink) {
-    if (_StreamOpFlag.DISTINCT.isKnown(flags)) {
+    if (_OpFlag.DISTINCT.isKnown(flags)) {
       return sink;
-    } else if (_StreamOpFlag.SORTED.isKnown(flags)){
+    } else if (_OpFlag.SORTED.isKnown(flags)){
       return _DistinctSinkSorted(sink);
     } else {
       return _DistinctSinkNotSorted(sink);

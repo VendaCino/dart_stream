@@ -8,6 +8,7 @@ class Item {
   Item(this.name, this.num);
 }
 Future<void> main() async {
+  print(DartStream.of([3,2,1]).map((t) => t-1).sorted().distinct().distinct().toList());
   print(DartStream.of([1,2,3]).map((t) => t-1).allMatch((t) => t>0));
   print(DartStream.of([1,2,3]).map((t) => t-1).sum());
   print(DartStream.of([1.5,2.5,3.5]).map((t) => t-1).sum());

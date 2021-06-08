@@ -4,7 +4,7 @@ class _TakeWhileOp<T> extends _DsPipeline<T, T> {
   final JPredicate<T> predicate;
 
   _TakeWhileOp(_AbstractPipeline previousStage, this.predicate)
-      : super.op(previousStage, _StreamOpFlag.NOT_SIZED);
+      : super.op(previousStage, _OpFlag.NOT_SIZED);
 
   @override
   _Sink<T> opWrapSink(int flags, _Sink<T> sink) {
@@ -40,7 +40,7 @@ class _DropWhileOp<T> extends _DsPipeline<T, T> {
   final JPredicate<T> predicate;
 
   _DropWhileOp(_AbstractPipeline previousStage, this.predicate)
-      : super.op(previousStage, _StreamOpFlag.NOT_SIZED);
+      : super.op(previousStage, _OpFlag.NOT_SIZED);
 
   @override
   _Sink<T> opWrapSink(int flags, _Sink<T> sink) {

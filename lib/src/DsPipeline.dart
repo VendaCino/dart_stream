@@ -9,20 +9,17 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
 
   @override
   bool allMatch(JPredicate<P_OUT> predicate) {
-    return evaluate(
-        _MatchOp<P_OUT>(_MatchKind.ALL, () => _DirMatchSink<P_OUT>(_MatchKind.ALL, predicate)));
+    return evaluate(_MatchOp<P_OUT>(_MatchKind.ALL, predicate));
   }
 
   @override
   bool anyMatch(JPredicate<P_OUT> predicate) {
-    return evaluate(
-        _MatchOp<P_OUT>(_MatchKind.ANY, () => _DirMatchSink<P_OUT>(_MatchKind.ANY, predicate)));
+    return evaluate(_MatchOp<P_OUT>(_MatchKind.ANY, predicate));
   }
 
   @override
   bool noneMatch(JPredicate<P_OUT> predicate) {
-    return evaluate(
-        _MatchOp<P_OUT>(_MatchKind.NONE, () => _DirMatchSink<P_OUT>(_MatchKind.NONE, predicate)));
+    return evaluate(_MatchOp<P_OUT>(_MatchKind.NONE, predicate));
   }
 
   @override
@@ -46,7 +43,7 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
 
   @override
   DartStream<P_OUT> filter(JPredicate<P_OUT> predicate) {
-    return _StatelessOp.op(this, _StreamOpFlag.NOT_SIZED, (flag,sink ) =>
+    return _StatelessOp(this, _OpFlag.NOT_SIZED, (flag,sink ) =>
         _NotSizedChainedSink<P_OUT,P_OUT>(sink,(t,_this){
           if (predicate(t)) _this.downstream.accept(t);
         }));
@@ -54,18 +51,18 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
 
   @override
   P_OUT findAny() {
-    return evaluate(_FindOp<P_OUT, P_OUT>(() => _DirFindSink<P_OUT>(), false));
+    return evaluate(_FindOp<P_OUT>());
   }
 
   @override
   P_OUT findFirst() {
-    return evaluate(_FindOp<P_OUT, P_OUT>(() => _DirFindSink<P_OUT>(), true));
+    return evaluate(_FindOp<P_OUT>());
   }
 
   @override
   DartStream<R> flatMap<R>(JFunction<P_OUT, DartStream<R>> mapper) {
-    return _StatelessOp<P_OUT, R>.op(
-        this, _StreamOpFlag.NOT_SORTED | _StreamOpFlag.NOT_DISTINCT | _StreamOpFlag.NOT_SIZED,
+    return _StatelessOp<P_OUT, R>(
+        this, _OpFlag.NOT_SORTED | _OpFlag.NOT_DISTINCT | _OpFlag.NOT_SIZED,
         (flag, sink) {
       return new _FlatMapChainedSink<P_OUT, R>(sink, (t, _this) {
         DartStream<R> result = mapper(t);
@@ -97,7 +94,7 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
 
   @override
   DartStream<R> map<R>(JFunction<P_OUT, R> mapper) {
-    return _StatelessOp<P_OUT, R>.op(this, _StreamOpFlag.NOT_SORTED | _StreamOpFlag.NOT_DISTINCT,
+    return _StatelessOp<P_OUT, R>(this, _OpFlag.NOT_SORTED | _OpFlag.NOT_DISTINCT,
         (flag, sink) {
       return new _ChainedSink<P_OUT, R>(sink, (t, _this) {
         _this.downstream.accept(mapper(t));
@@ -119,7 +116,7 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
 
   @override
   DartStream<P_OUT> peek(JConsumer<P_OUT> action) {
-    return _StatelessOp<P_OUT, P_OUT>.op(this, 0, (flag, sink) {
+    return _StatelessOp<P_OUT, P_OUT>(this, 0, (flag, sink) {
       return new _ChainedSink<P_OUT, P_OUT>(sink, (t, _this) {
         action(t);
         _this.downstream.accept(t);
@@ -129,23 +126,21 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
 
   @override
   U reduce<U>(U identity, JBiFunction<U, P_OUT, U> accumulator) {
-    return evaluate(_ReduceOp<P_OUT, U, _HasSeedReducingSink<P_OUT, U>>(
-        () => _HasSeedReducingSink<P_OUT, U>(identity, accumulator)));
+    return evaluate(_ReduceOp<P_OUT, U, _TerminalSink<P_OUT, U>>(accumulator,identity));
   }
 
   P_OUT reduce0(JBinaryOperator<P_OUT> accumulator) {
-    return evaluate(_ReduceOp<P_OUT, P_OUT, _NoSeedReducingSink<P_OUT>>(
-        () => _NoSeedReducingSink<P_OUT>(accumulator)));
+    return evaluate(_ReduceOp<P_OUT, P_OUT, _TerminalSink<P_OUT, P_OUT>>(accumulator));
   }
 
   @override
   DartStream<P_OUT> limit(int maxSize) {
-    return _SliceOp.op(this, 0, maxSize > 0 ? maxSize : 0);
+    return new _SliceOp(this, 0, maxSize > 0 ? maxSize : 0);
   }
 
   @override
   DartStream<P_OUT> skip(int n) {
-    return _SliceOp.op(this, n > 0 ? n : 0, -1);
+    return new _SliceOp(this, n > 0 ? n : 0, -1);
   }
 
   @override

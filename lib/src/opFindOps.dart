@@ -1,31 +1,19 @@
 part of '../dart_stream.dart';
 
-class _FindOp<T, O> implements _TerminalOp<T, O> {
-  bool mustFindFirst = false;
-  final JSupplier<_TerminalSink<T, O>> sinkSupplier;
-
-  O emptyValue;
-
-  _FindOp(this.sinkSupplier, [this.mustFindFirst = false, this.emptyValue]);
-
-  @override
-  O evaluate<P_IN>(
-      _PipelineHelper<T> helper, BaseIterator<P_IN> sourceIterator) {
-    O result = helper
-        .wrapAndCopyInto<P_IN, _TerminalSink<T, O>>(
-        sinkSupplier(), sourceIterator)
-        .get();
-    return result != null ? result : emptyValue;
-  }
+class _FindOp<T> extends _TerminalOp<T, T> {
 
   @override
   int getOpFlag() {
-    return _StreamOpFlag.IS_SHORT_CIRCUIT |
-    (mustFindFirst ? 0 : _StreamOpFlag.NOT_ORDERED);
+    return _OpFlag.IS_SHORT_CIRCUIT ;
+  }
+
+  @override
+  _TerminalSink<T, T> makeSink() {
+    return new _FindSink();
   }
 }
 
-abstract class _FindSink<T, O> extends _TerminalSink<T, O> {
+class _FindSink<T> extends _TerminalSink<T, T> {
   bool hasValue = false;
   T value;
 
@@ -41,11 +29,10 @@ abstract class _FindSink<T, O> extends _TerminalSink<T, O> {
   bool cancellationRequested() {
     return hasValue;
   }
-}
 
-class _DirFindSink<T> extends _FindSink<T, T> {
   @override
   T get() {
     return hasValue ? value : null;
   }
 }
+
