@@ -8,7 +8,7 @@ class _SortedOp<T> extends _DsPipeline<T, T> {
 
   final Comparator<T> comparator;
   final bool isNaturalSort;
-  _SortedOp(_AbstractPipeline previousStage, this.comparator, this.isNaturalSort) : super.op(previousStage,  _OpFlag.IS_SORTED);
+  _SortedOp(_AbstractPipeline previousStage, this.comparator, this.isNaturalSort) : super.op(previousStage,  isNaturalSort?_OpFlag.IS_SORTED:0);
 
   @override
   _Sink<T> opWrapSink(int flags, _Sink<T> sink) {

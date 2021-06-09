@@ -62,5 +62,18 @@ test( 'sorted by path',() {
     expect(data[3].a, equals( 2));
 
 });
+test('sorted twice', () {
 
+    var result = DartStream.of([4, 1, 3, 2])
+        .sorted((e1,e2)=>e2-e1)
+        .sorted()
+        .toList();
+
+    expect(result.length, equals( 4));
+    expect(result[0], equals( 1));
+    expect(result[1], equals( 2));
+    expect(result[2], equals( 3));
+    expect(result[3], equals( 4));
+
+});
 }
