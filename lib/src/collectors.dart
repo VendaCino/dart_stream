@@ -36,7 +36,7 @@ class Collectors {
       JFunction<T, U> valueMapper, [JBinaryOperator<U> mergeFunction, JSupplier<Map<K, U>> mapSupplier]) {
     if (mapSupplier == null) mapSupplier = () => HashMap<K, U>();
     if (mergeFunction == null) mergeFunction = (v1, v2) => throw Exception("Duplicated key");
-    JBiConsumer<Map<K, U>, T> accumulator = (map, element) {
+    JBiFunction<Map<K, U>, T,Map<K, U>> accumulator = (map, element) {
       var key = keyMapper(element);
       var value = valueMapper(element);
       if (!map.containsKey(key))
