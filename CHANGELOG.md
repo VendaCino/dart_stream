@@ -1,3 +1,8 @@
+## 0.0.4
+Remove unused code.
+Recode duplicated code.
+Fix distinct twice bug.
+
 ## 0.0.3
 Add reverse operation.
 Add takeWhile operation.

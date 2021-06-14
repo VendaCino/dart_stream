@@ -3,7 +3,7 @@ description: A collection util can process list by some operation like flatMap d
 homepage: https://github.com/VendaCino/dart_stream
 repository: https://github.com/VendaCino/dart_stream
 
-version: 0.0.3
+version: 0.0.4
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
