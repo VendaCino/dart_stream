@@ -1,3 +1,7 @@
+## 0.1.0
+* Null safety
+* Minor fixes
+
 ## 0.0.4
 Remove unused code.
 Recode duplicated code.
