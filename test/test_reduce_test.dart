@@ -6,7 +6,7 @@ void main(){
 test('reduce', () {
 
     var result = DartStream.of([1, 2, 3, 4])
-        .reduce(1000, (identity, num) {
+        .reduce<int>(1000, (identity, num) {
             return identity + num;
         });
     expect(result, equals( 1010));
@@ -14,8 +14,8 @@ test('reduce', () {
 });
 test('reduce empty', () {
 
-    var result = DartStream.of([])
-        .reduce(1000, (identity, num) {
+    var result = DartStream.of<int>([])
+        .reduce<int>(1000, (identity, num) {
             return identity + num;
         });
     expect(result, equals( 1000));

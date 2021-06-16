@@ -3,7 +3,7 @@ part of '../dart_stream.dart';
 typedef _WrapSinkFunction<E_IN, E_OUT> = _Sink<E_IN> Function(int, _Sink<E_OUT>);
 
 class _StatelessOp<E_IN, E_OUT> extends _DsPipeline<E_IN, E_OUT> {
-  final _WrapSinkFunction wrapSinkFunction;
+  final _WrapSinkFunction<E_IN, E_OUT> wrapSinkFunction;
 
   _StatelessOp(
       _AbstractPipeline previousStage, int opFlags, this.wrapSinkFunction)

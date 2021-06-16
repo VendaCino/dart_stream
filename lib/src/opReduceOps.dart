@@ -5,17 +5,27 @@ class _ReduceOp<T, R, S extends _TerminalSink<T, R>> extends _TerminalOp<T, R> {
   final R seed;
   final JBiFunction<R, T, R> reducer;
 
-  _ReduceOp(this.reducer, [this.seed]);
+  _ReduceOp(this.reducer, this.seed);
 
   @override
   _TerminalSink<T, R> makeSink() {
-    if(seed!=null) return new _HasSeedReducingSink<T, R>(seed, reducer);
-    else return new _NoSeedReducingSink<R>(reducer as JBinaryOperator<R>) as _TerminalSink<T, R>;
+    return new _HasSeedReducingSink<T, R>(seed, reducer);
+  }
+}
+
+class _ReduceNoSeedOp<T, S extends _TerminalSink<T, T?>> extends _TerminalOp<T, T?> {
+  final JBinaryOperator<T>  reducer;
+
+  _ReduceNoSeedOp(this.reducer);
+
+  @override
+  _TerminalSink<T, T?> makeSink() {
+    return new _NoSeedReducingSink<T>(reducer);
   }
 }
 
 class _HasSeedReducingSink<T, R> extends _TerminalSink<T, R> {
-  R state;
+  late R state;
   R seed;
   final JBiFunction<R, T, R> reducer;
 
@@ -36,14 +46,14 @@ class _HasSeedReducingSink<T, R> extends _TerminalSink<T, R> {
 
 }
 
-class _NoSeedReducingSink<T> extends _TerminalSink<T, T>{
-  T state;
+class _NoSeedReducingSink<T> extends _TerminalSink<T, T?>{
+  T? state;
   bool empty = true;
   final JBinaryOperator<T> operator;
 
   _NoSeedReducingSink(this.operator);
 
-  T get() {
+  T? get() {
     return state;
   }
 
@@ -58,7 +68,7 @@ class _NoSeedReducingSink<T> extends _TerminalSink<T, T>{
       empty = false;
       state = t;
     } else {
-      state = operator(state, t);
+      state = operator(state!, t);
     }
   }
 

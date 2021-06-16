@@ -18,6 +18,6 @@ class _ShuffleSink<T> extends _SortedSink<T>{
 
   @override
   void onEndSort(){
-    list.shuffle();
+    list!.shuffle();
   }
 }

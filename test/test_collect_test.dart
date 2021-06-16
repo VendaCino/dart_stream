@@ -22,7 +22,7 @@ test('collect', () {
 });
 test('collect without finisher', () {
 
-    var result = DartStream.of([1, 2, 3, 4]).collect<String,String>(SimpleCollector<int, String,String>(
+    var result = DartStream.of([1, 2, 3, 4]).collect<String,String>(SimpleCollector<int, String, String>(
         supplier: () {
             return "Data: ";
         },

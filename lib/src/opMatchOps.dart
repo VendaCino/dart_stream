@@ -24,7 +24,7 @@ class _MatchOp<T> extends _TerminalOp<T, bool> {
 class _MatchOpSink<T> extends _TerminalSink<T,bool>{
   final _MatchKind matchKind;
   final JPredicate<T> predicate;
-  _MatchOpSink(this.matchKind, this.predicate) : value = !shortCircuitResult[matchKind];
+  _MatchOpSink(this.matchKind, this.predicate) : value = !shortCircuitResult[matchKind]!;
   bool stop = false;
   bool value = false;
 
@@ -45,7 +45,7 @@ class _MatchOpSink<T> extends _TerminalSink<T,bool>{
   void accept(T t) {
     if (!stop && predicate(t) == stopOnPredicateMatches[matchKind]) {
       stop = true;
-      value = shortCircuitResult[matchKind];
+      value = shortCircuitResult[matchKind]!;
     }
   }
 

@@ -2,8 +2,7 @@ part of '../dart_stream.dart';
 
 class _SortedOp<T> extends _DsPipeline<T, T> {
   static final Comparator<dynamic> natureComparator=(dynamic o1,dynamic o2){
-    if(o1 is num && o2 is num) return o1-o2;
-    else return 0;
+    return o1==o2?0:o1>o2?1:-1;
   };
 
   final Comparator<T> comparator;
@@ -22,10 +21,10 @@ class _SortedOp<T> extends _DsPipeline<T, T> {
 }
 
 class _SortedSink<T> extends _ChainedSink<T, T> {
-  final Comparator<T> comparator;
+  final Comparator<T>? comparator;
   final bool sized;
   bool cancellationRequestedCalled = false;
-  List<T> list;
+  List<T>? list;
   int offset = 0;
 
   _SortedSink(_Sink<T> downstream, this.comparator, this.sized)
@@ -39,23 +38,25 @@ class _SortedSink<T> extends _ChainedSink<T, T> {
 
   @override
   void begin(int size) {
-    if(sized) list = List.filled(size,null, growable: false);
-    else list = List.empty(growable: true);
+    // if(sized)
+    //   list = List.filled(size, null, growable: false);
+    // else
+      list = List.empty(growable: true);
   }
 
   void onEndSort(){
-    list.sort(this.comparator);
+    list!.sort(this.comparator);
   }
 
   @override
   void end() {
     onEndSort();
-    downstream.begin(list.length);
+    downstream.begin(list!.length);
     if (!cancellationRequestedCalled) {
-      list.forEach((e)=>downstream.accept(e));
+      list!.forEach((e)=>downstream.accept(e));
     }
     else {
-      for (T t in list) {
+      for (T t in list!) {
         if (downstream.cancellationRequested()) break;
         downstream.accept(t);
       }
@@ -66,7 +67,8 @@ class _SortedSink<T> extends _ChainedSink<T, T> {
 
   @override
   void accept(T t) {
-    if(sized) list[offset++] = t;
-    else list.add(t);
+    // if(sized) list![offset++] = t;
+    // else
+      list!.add(t);
   }
 }

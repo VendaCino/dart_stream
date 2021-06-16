@@ -1,5 +1,4 @@
 part of '../dart_stream.dart';
-
 abstract class BaseIterator<T> {
   static const int DISTINCT = 0x00000001;
   static const int ORDERED = 0x00000010;
@@ -11,7 +10,6 @@ abstract class BaseIterator<T> {
   T next();
 
   bool done = false;
-  bool toNil = false;
 
   int characteristics() {
     return 0;
@@ -28,29 +26,24 @@ abstract class BaseIterator<T> {
   forEachRemaining(JConsumer<T> action) {
     while (!done) {
       T now = next();
-      if (!toNil) action(now);
-      else break;
+      action(now);
     }
   }
 }
 
 class _ArrayIterator<T> extends BaseIterator<T> {
-  List<T> data;
-  int origin;
-  int fence;
+  late List<T> data;
+  late int origin;
+  late int fence;
 
   _ArrayIterator(List<T> array) {
-    this.data = array ?? [];
+    this.data = array;
     this.origin = 0;
     this.fence = this.data.length;
+    this.done = this.origin >= this.fence;
   }
 
   T next() {
-    if (this.origin >= this.fence) {
-      done = true;
-      toNil = true;
-      return null;
-    }
     try {
       return this.data[this.origin];
     } finally {
@@ -66,25 +59,25 @@ class _ArrayIterator<T> extends BaseIterator<T> {
 
   @override
   int estimateSize() {
-    return data?.length??-1;
+    return data.length;
   }
 }
 
 class _IteratorIterator<T> extends BaseIterator<T> {
-  Iterator<T> iterator;
 
-  _IteratorIterator(Iterator<T> iterator) {
-    this.iterator = iterator;
+  Iterator<T> iterator;
+  late T value;
+
+  _IteratorIterator(this.iterator) {
+    this.done = !this.iterator.moveNext();
+    if(!this.done) value = iterator.current;
   }
 
   T next() {
-    if (this.iterator.moveNext()) {
-      return iterator.current;
-    } else {
-      done = true;
-      toNil = true;
-      return null;
-    }
+    var value = this.value;
+    this.done = !this.iterator.moveNext();
+    if(!this.done) this.value = iterator.current;
+    return value;
   }
 }
 
@@ -96,12 +89,8 @@ class _ValueIterator<T> extends BaseIterator<T> {
   }
 
   T next() {
-    if (!this.done) {
-      this.done = true;
-      return this.value;
-    }
-    toNil = true;
-    return null;
+    this.done = true;
+    return this.value;
   }
 
   @override
@@ -116,15 +105,13 @@ class _ValueIterator<T> extends BaseIterator<T> {
 }
 
 class _EmptyIterator<T> extends BaseIterator<T> {
-  T value;
 
   _EmptyIterator() {
     this.done = true;
   }
 
   T next() {
-    toNil = true;
-    return null;
+    throw "No Value";
   }
   @override
   int characteristics() {

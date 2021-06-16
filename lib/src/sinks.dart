@@ -11,7 +11,7 @@ abstract class _Sink<T>{
 
 class _ChainedSink<T, E_OUT> extends _Sink<T> {
   final _Sink<E_OUT> downstream;
-  final JBiConsumer<T,_ChainedSink<T, E_OUT>> consumer;
+  final JBiConsumer<T,_ChainedSink<T, E_OUT>>? consumer;
 
   _ChainedSink(this.downstream, this.consumer);
 
@@ -29,7 +29,7 @@ class _ChainedSink<T, E_OUT> extends _Sink<T> {
 
   @override
   void accept(T t) {
-    consumer(t,this);
+    consumer!(t,this);
   }
 }
 class _NotSizedChainedSink<T,E_OUT>extends _ChainedSink<T, E_OUT>{

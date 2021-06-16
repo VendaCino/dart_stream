@@ -39,7 +39,7 @@ class SimpleCollector<T, A, R> implements Collector<T, A, R>{
   JBiFunction<A, T, A> accumulator;
 
   @override
-  JFunction<A, R> finisher;
+  JFunction<A, R>? finisher;
 
-  SimpleCollector({this.supplier, this.accumulator, this.finisher});
+  SimpleCollector({required this.supplier, required this.accumulator,this.finisher});
 }

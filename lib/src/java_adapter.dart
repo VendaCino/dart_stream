@@ -14,7 +14,7 @@ extension _JavaMap<K, V> on Map<K, V> {
     this[key] = value;
   }
 
-  V get(K key) {
+  V? get(K key) {
     return containsKey(key) ? this[key] : null;
   }
 }

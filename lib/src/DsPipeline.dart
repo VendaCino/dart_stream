@@ -26,7 +26,7 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
   R collect<R, A>(Collector<P_OUT, A, R> collector) {
     A container = reduce<A>(collector.supplier(), collector.accumulator);
     if (collector.finisher != null)
-      return collector.finisher(container);
+      return collector.finisher!(container);
     else
       return container as R;
   }
@@ -50,12 +50,12 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
   }
 
   @override
-  P_OUT findAny() {
+  P_OUT? findAny() {
     return evaluate(_FindOp<P_OUT>());
   }
 
   @override
-  P_OUT findFirst() {
+  P_OUT? findFirst() {
     return evaluate(_FindOp<P_OUT>());
   }
 
@@ -74,11 +74,7 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
               var it = result.sourceIterator;
               while (!it.done) {
                 if (_this.downstream.cancellationRequested()) return;
-                var now = it.next();
-                if (!it.toNil)
-                  sink.accept(now);
-                else
-                  break;
+                sink.accept(it.next());
               }
             } else {
               result.forEach((e) {
@@ -103,15 +99,15 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
   }
 
   @override
-  P_OUT max([Comparator<P_OUT> comparator]) {
+  P_OUT? max([Comparator<P_OUT>? comparator]) {
     if(comparator==null) comparator = _SortedOp.natureComparator;
-    return reduce0((a, b) => comparator(a, b) >= 0 ? a : b);
+    return reduce0((a, b) => comparator!(a, b) >= 0 ? a : b);
   }
 
   @override
-  P_OUT min([Comparator<P_OUT> comparator]) {
+  P_OUT? min([Comparator<P_OUT>? comparator]) {
     if(comparator==null) comparator = _SortedOp.natureComparator;
-    return reduce0((a, b) => comparator(a, b) <= 0 ? a : b);
+    return reduce0((a, b) => comparator!(a, b) <= 0 ? a : b);
   }
 
   @override
@@ -129,8 +125,8 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
     return evaluate(_ReduceOp<P_OUT, U, _TerminalSink<P_OUT, U>>(accumulator,identity));
   }
 
-  P_OUT reduce0(JBinaryOperator<P_OUT> accumulator) {
-    return evaluate(_ReduceOp<P_OUT, P_OUT, _TerminalSink<P_OUT, P_OUT>>(accumulator));
+  P_OUT? reduce0(JBinaryOperator<P_OUT> accumulator) {
+    return evaluate(_ReduceNoSeedOp<P_OUT, _TerminalSink<P_OUT, P_OUT?>>(accumulator));
   }
 
   @override
@@ -144,7 +140,7 @@ abstract class _DsPipeline<P_IN, P_OUT> extends _AbstractPipeline<P_IN, P_OUT>
   }
 
   @override
-  DartStream<P_OUT> sorted([Comparator<P_OUT> comparator]) {
+  DartStream<P_OUT> sorted([Comparator<P_OUT>? comparator]) {
     if (comparator != null) return _SortedOp(this, comparator, false);
     else return _SortedOp(this, _SortedOp.natureComparator, true);
   }

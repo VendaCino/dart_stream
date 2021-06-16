@@ -19,7 +19,7 @@ class _DistinctOp<T> extends _DsPipeline<T, T> {
 class _DistinctSinkSorted<T> extends _ChainedSink<T,T>{
   _DistinctSinkSorted(_Sink<T> downstream) : super(downstream, null);
   bool seenNull = false;
-  T lastSeen;
+  T? lastSeen;
 
   @override
    void begin(int size) {
@@ -40,7 +40,8 @@ class _DistinctSinkSorted<T> extends _ChainedSink<T,T>{
     if (t == null) {
       if (!seenNull) {
         seenNull = true;
-        downstream.accept(lastSeen = null);
+        lastSeen = null;
+        downstream.accept(t);
       }
     } else if (lastSeen == null || t!=(lastSeen)) {
       downstream.accept(lastSeen = t);
@@ -51,8 +52,7 @@ class _DistinctSinkSorted<T> extends _ChainedSink<T,T>{
 
 class _DistinctSinkNotSorted<T> extends _ChainedSink<T,T>{
   _DistinctSinkNotSorted(_Sink<T> downstream) : super(downstream, null);
-  Set<T> seen;
-  T lastSeen;
+  Set<T>? seen;
 
   @override
   void begin(int size) {
@@ -68,8 +68,8 @@ class _DistinctSinkNotSorted<T> extends _ChainedSink<T,T>{
 
   @override
   void accept(T t) {
-    if (!seen.contains(t)) {
-      seen.add(t);
+    if (!seen!.contains(t)) {
+      seen!.add(t);
       downstream.accept(t);
     }
   }

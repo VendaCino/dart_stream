@@ -23,7 +23,7 @@ test('findFirst empty', () {
 test( 'findFirst object',() {
 
     var result = DartStream.one(Obj2(1, 2)).findFirst();
-    expect(result.a, equals( 1));
+    expect(result!.a, equals( 1));
 
 });
 

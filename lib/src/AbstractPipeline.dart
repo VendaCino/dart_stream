@@ -4,21 +4,21 @@ abstract class _AbstractPipeline<E_IN, E_OUT> {
   static const String MSG_STREAM_LINKED = "stream has already been operated upon or closed";
 
   bool linkedOrConsumed = false;
-  BaseIterator<dynamic> sourceIterator;
-  int combinedOpFlag;
-  int depth;
-  final _AbstractPipeline previousStage;
-  _AbstractPipeline nextStage;
+  late BaseIterator<dynamic> sourceIterator;
+  late int combinedOpFlag;
+  late int depth;
+  final _AbstractPipeline? previousStage;
+  _AbstractPipeline? nextStage;
 
 
   _AbstractPipeline.op(this.previousStage, int opFlags){
-    if (previousStage.linkedOrConsumed) throw new Exception(MSG_STREAM_LINKED);
-    previousStage.linkedOrConsumed = true;
-    previousStage.nextStage = this;
-    sourceIterator = previousStage.sourceIterator;
+    if (previousStage!.linkedOrConsumed) throw new Exception(MSG_STREAM_LINKED);
+    previousStage!.linkedOrConsumed = true;
+    previousStage!.nextStage = this;
+    sourceIterator = previousStage!.sourceIterator;
 
-    this.combinedOpFlag = _OpFlag.combineOpFlags(opFlags, previousStage.combinedOpFlag);
-    this.depth = previousStage.depth + 1;
+    this.combinedOpFlag = _OpFlag.combineOpFlags(opFlags, previousStage!.combinedOpFlag);
+    this.depth = previousStage!.depth + 1;
   }
 
   _AbstractPipeline.source(this.sourceIterator,int sourceFlags)
@@ -43,8 +43,8 @@ abstract class _AbstractPipeline<E_IN, E_OUT> {
   _Sink<P_IN> _wrapSink<P_IN>(_Sink<E_OUT> inSink) {
     assert(inSink != null);
     _Sink sink = inSink;
-    for (_AbstractPipeline p = this; p.depth > 0; p = p.previousStage) {
-      sink = p.opWrapSink(p.previousStage.combinedOpFlag, sink);
+    for (_AbstractPipeline p = this; p.depth > 0; p = p.previousStage!) {
+      sink = p.opWrapSink(p.previousStage!.combinedOpFlag, sink);
     }
     return sink as _Sink<P_IN>;
   }
@@ -62,7 +62,7 @@ abstract class _AbstractPipeline<E_IN, E_OUT> {
   void _copyIntoWithCancel<P_IN> (_Sink<P_IN> wrappedSink, BaseIterator<P_IN> spliterator) {
     _AbstractPipeline p = this;
     while (p.depth > 0) {
-      p = p.previousStage;
+      p = p.previousStage!;
     }
     wrappedSink.begin(spliterator.getExactSizeIfKnown());
     p._forEachWithCancel(spliterator, wrappedSink);
@@ -74,9 +74,7 @@ abstract class _AbstractPipeline<E_IN, E_OUT> {
       if(sink.cancellationRequested()){
         return;
       }
-      var now = it.next();
-      if (!it.toNil) sink.accept(now);
-      else break;
+      sink.accept(it.next());
     }
   }
 }

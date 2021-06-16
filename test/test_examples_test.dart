@@ -2,11 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dart_stream/dart_stream.dart';
 
 class _Person {
-  int parentId;
-  int childId;
-  String type;
-  List<_Person> children;
-  _Person parent;
+  int? parentId;
+  int? childId;
+  String? type;
+  List<_Person>? children;
+  _Person? parent;
 
   _Person({this.parentId, this.childId, this.type, this.children, this.parent});
 }
@@ -25,7 +25,7 @@ void main() {
   test('filter - flatMap - map - distinct - filter - join', () {
     var names = DartStream.of<_Person>([])
         .filter((t) => t.type == 'parent')
-        .flatMap((t) => t.children.toStream())
+        .flatMap((t) => t.children!.toStream())
         .map((t) => t.toString())
         .distinct()
         .filter((t) => t.startsWith("a"))
@@ -69,9 +69,9 @@ void main() {
       var parent = parents[i];
       expect(parent.parentId, equals(i));
       expect(parent.type, equals('parent'));
-      expect(parent.children.length, equals(3));
-      for (var j = 0; j < parent.children.length; j++) {
-        var child = parent.children[j];
+      expect(parent.children!.length, equals(3));
+      for (var j = 0; j < parent.children!.length; j++) {
+        var child = parent.children![j];
         expect(child.childId, equals(j));
         expect(child.type, equals('child'));
         expect(child.parent, equals(parent));
@@ -82,9 +82,9 @@ void main() {
     var parents = createParents(5, 3);
 
     var children = DartStream.of(parents).filter((p) {
-      return p.parentId > 2;
+      return p.parentId! > 2;
     }).flatMap((p) {
-      return p.children.toStream();
+      return p.children!.toStream();
     }).toList();
 
     expect(children.length, equals(6));

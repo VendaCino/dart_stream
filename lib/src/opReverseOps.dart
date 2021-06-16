@@ -22,11 +22,11 @@ class _ReverseSink<T> extends _SortedSink<T>{
 
   @override
   void end() {
-    downstream.begin(list.length);
+    downstream.begin(list!.length);
     if (!cancellationRequestedCalled) {
-      list.reversed.forEach((e) => downstream.accept(e));
+      list!.reversed.forEach((e) => downstream.accept(e));
     } else {
-      for (T t in list.reversed) {
+      for (T t in list!.reversed) {
         if (downstream.cancellationRequested()) break;
         downstream.accept(t);
       }

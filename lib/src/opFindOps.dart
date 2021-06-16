@@ -1,6 +1,6 @@
 part of '../dart_stream.dart';
 
-class _FindOp<T> extends _TerminalOp<T, T> {
+class _FindOp<T> extends _TerminalOp<T, T?> {
 
   @override
   int getOpFlag() {
@@ -8,14 +8,14 @@ class _FindOp<T> extends _TerminalOp<T, T> {
   }
 
   @override
-  _TerminalSink<T, T> makeSink() {
+  _TerminalSink<T, T?> makeSink() {
     return new _FindSink();
   }
 }
 
-class _FindSink<T> extends _TerminalSink<T, T> {
+class _FindSink<T> extends _TerminalSink<T, T?> {
   bool hasValue = false;
-  T value;
+  late T value;
 
   @override
   void accept(T value) {
@@ -31,7 +31,7 @@ class _FindSink<T> extends _TerminalSink<T, T> {
   }
 
   @override
-  T get() {
+  T? get() {
     return hasValue ? value : null;
   }
 }

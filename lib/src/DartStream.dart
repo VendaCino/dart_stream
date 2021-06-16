@@ -13,6 +13,10 @@ mixin DartStream<T> {
     return _Head<R,R>.source(_EmptyIterator<R>(), _OpFlag.IS_SIZED);
   }
 
+  static DartStream<R> iterator<R>(Iterator<R> iterator){
+    return _Head<R,R>.source(_IteratorIterator<R>(iterator), _OpFlag.NOT_SIZED);
+  }
+
   static DartStream<int> range(int start, int end){
     var list = List.filled(end-start, 0);
     for(int i=0;i<list.length;++i) list[i]=i+start;
@@ -47,15 +51,15 @@ mixin DartStream<T> {
 // -----Terminal Operation-------
   List<T> toList();
 
-  T reduce0(JBinaryOperator<T> accumulator);
+  T? reduce0(JBinaryOperator<T> accumulator);
 
   R reduce<R>(R identity, JBiFunction<R, T, R> accumulator);
 
   R collect<R,A>(Collector<T,A,R> collector);
 
-  T min([Comparator<T> comparator]);
+  T? min([Comparator<T> comparator]);
 
-  T max([Comparator<T> comparator]);
+  T? max([Comparator<T> comparator]);
 
   int count();
 
@@ -65,9 +69,9 @@ mixin DartStream<T> {
 
   bool noneMatch(JPredicate<T> predicate);
 
-  T findFirst();
+  T? findFirst();
 
-  T findAny();
+  T? findAny();
 
   void forEach(JConsumer<T> action);
 }
@@ -78,22 +82,22 @@ extension ExtendDartStream<T> on DartStream<T>{
     return skip(start).limit(end-start);
   }
   Map<K, U> toMap<K,U>(JFunction<T, K> keyMapper,
-      JFunction<T, U> valueMapper, [JBinaryOperator<U> mergeFunction, JSupplier<Map<K, U>> mapSupplier]){
+      JFunction<T, U> valueMapper, [JBinaryOperator<U>? mergeFunction, JSupplier<Map<K, U>>? mapSupplier]){
     return collect(Collectors.toMap(keyMapper,valueMapper,mergeFunction,mapSupplier));
   }
 }
 
 extension StringDartStream<T> on DartStream<String>{
-  String joining([String delimiter]){
-    return collect<String,String>(Collectors.joining(delimiter));
+  String joining([String? delimiter]){
+    return collect<String,String?>(Collectors.joining(delimiter));
   }
 }
 
 extension NumberDartStream<T extends num> on DartStream<T>{
   T sum(){
-    return reduce<num>(0, (t, u) => t+u);
+    return reduce<num>(0, (t, u) => t+u) as T;
   }
-  double average(){
+  double? average(){
     List<double> a = [0.0,0.0];
     var r = reduce<List<double>>(a, (t, u) {
       return [t[0]+1,t[1]+u];
