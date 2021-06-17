@@ -1,5 +1,6 @@
 Dart Stream
 =====================
+
 A collection util inspired by java streams
 <br>
 
@@ -19,6 +20,8 @@ void main() {
   print([1, 2, 3].toStream().map((t) => t - 1).toList());
 }
 ```
+### Pub.dev
+[Dart Stream](https://pub.dev/packages/dart_stream)
 
 ### Todo List
 - [x] : shuffle
@@ -27,6 +30,10 @@ void main() {
 - [x] : dropWhile
 - [ ] : more unit test
 - [ ] : more async method
+
+### See Also
+* [Dart Stream](https://github.com/VendaCino/dart_stream)
+* [Typescript Stream](https://github.com/VendaCino/tsstream)
 
 ### License
 
