@@ -20,8 +20,10 @@ void main() {
   print([1, 2, 3].toStream().map((t) => t - 1).toList());
 }
 ```
-### Pub.dev
-[Dart Stream](https://pub.dev/packages/dart_stream)
+### [Pub.dev](https://pub.dev/packages/dart_stream)
+```bash
+flutter pub add dart_stream
+```
 
 ### Todo List
 - [x] : shuffle
