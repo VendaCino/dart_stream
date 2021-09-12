@@ -112,3 +112,9 @@ extension ToStreamList<T> on List<T>{
     return DartStream.of(this);
   }
 }
+
+extension ToStreamIterable<T> on Iterable<T>{
+  DartStream<T> toStream(){
+    return DartStream.of(this.toList());
+  }
+}
