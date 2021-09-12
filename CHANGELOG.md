@@ -1,3 +1,6 @@
+## 0.1.1
+add ToStreamIterable
+
 ## 0.1.0
 * Null safety
 * Minor fixes
