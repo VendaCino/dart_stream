@@ -1,3 +1,6 @@
+## 0.1.2
+fix javascript int limit bug
+
 ## 0.1.1
 add ToStreamIterable
 
