@@ -20,7 +20,7 @@ class _SliceOp<T> extends _DsPipeline<T, T> {
 class _SliceSink<T> extends _ChainedSink<T, T> {
   _SliceSink(_Sink<T> downstream, this.skip, this.limit)
       : n = skip,
-        m = limit >= 0 ? limit : 0x7fffffffffffffff,
+        m = limit >= 0 ? limit : double.maxFinite.toInt(),
         super(downstream, null);
   final int skip;
   final int limit;
